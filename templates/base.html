@@ -3,7 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}NPTEL Software Testing{% endblock %}</title>
+    <title>{% block title %}NPTEL Software Testing Solutions - noc26_cs59 Weekly Assignments{% endblock %}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{% block description %}Free NPTEL Software Testing (noc26_cs59) weekly assignment solutions. Get answers for all weeks with progress tracking. Join thousands of students acing their NPTEL course.{% endblock %}">
+    <meta name="keywords" content="NPTEL, Software Testing, noc26_cs59, NPTEL solutions, NPTEL answers, Software Testing assignments, NPTEL week 1, NPTEL 2026, testing course, software engineering, NPTEL assignment answers">
+    <meta name="author" content="NPTEL Solutions Hub">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://weekly-nptel-assignments.onrender.com{{ request.path }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://weekly-nptel-assignments.onrender.com{{ request.path }}">
+    <meta property="og:title" content="{% block og_title %}NPTEL Software Testing Solutions - noc26_cs59{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Free weekly assignment solutions for NPTEL Software Testing course. Track your progress and ace your exams!{% endblock %}">
+    <meta property="og:image" content="https://weekly-nptel-assignments.onrender.com/static/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://weekly-nptel-assignments.onrender.com{{ request.path }}">
+    <meta property="twitter:title" content="{% block twitter_title %}NPTEL Software Testing Solutions{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}Get all NPTEL Software Testing assignment answers with progress tracking{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    
+    <!-- Structured Data / Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "EducationalOrganization",
+      "name": "NPTEL Software Testing Solutions Hub",
+      "description": "Free NPTEL Software Testing (noc26_cs59) weekly assignment solutions and answers",
+      "url": "https://weekly-nptel-assignments.onrender.com",
+      "courseCode": "noc26_cs59",
+      "educationalLevel": "University",
+      "keywords": "NPTEL, Software Testing, noc26_cs59, assignment solutions"
+    }
+    </script>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_css %}{% endblock %}
 </head>

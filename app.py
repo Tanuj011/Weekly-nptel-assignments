@@ -84,6 +84,55 @@ def create_tables():
         db.create_all()
         app.tables_created = True
 
+@app.route('/robots.txt')
+def robots():
+    return app.send_static_file('robots.txt')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    """Generate sitemap for SEO"""
+    pages = []
+    
+    # Static pages
+    pages.append({
+        'loc': url_for('index', _external=True),
+        'changefreq': 'daily',
+        'priority': '1.0'
+    })
+    pages.append({
+        'loc': url_for('register', _external=True),
+        'changefreq': 'monthly',
+        'priority': '0.8'
+    })
+    pages.append({
+        'loc': url_for('login', _external=True),
+        'changefreq': 'monthly',
+        'priority': '0.8'
+    })
+    
+    # Week pages
+    weeks = Week.query.all()
+    for week in weeks:
+        pages.append({
+            'loc': url_for('view_week', week_id=week.id, _external=True),
+            'changefreq': 'weekly',
+            'priority': '0.9'
+        })
+    
+    sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    sitemap_xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    
+    for page in pages:
+        sitemap_xml += '  <url>\n'
+        sitemap_xml += f'    <loc>{page["loc"]}</loc>\n'
+        sitemap_xml += f'    <changefreq>{page["changefreq"]}</changefreq>\n'
+        sitemap_xml += f'    <priority>{page["priority"]}</priority>\n'
+        sitemap_xml += '  </url>\n'
+    
+    sitemap_xml += '</urlset>'
+    
+    return sitemap_xml, 200, {'Content-Type': 'application/xml'}
+
 @app.route('/')
 def index():
     if current_user.is_authenticated:
