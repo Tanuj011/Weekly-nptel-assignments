@@ -60,6 +60,13 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # Routes
+@app.before_request
+def create_tables():
+    """Create database tables before first request"""
+    if not hasattr(app, 'tables_created'):
+        db.create_all()
+        app.tables_created = True
+
 @app.route('/')
 def index():
     if current_user.is_authenticated:
