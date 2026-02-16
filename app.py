@@ -200,6 +200,39 @@ def reset_database():
     db.create_all()
     return redirect(url_for('init_database'))
 
+@app.route('/admin/users')
+def view_users():
+    """View all registered users"""
+    users = User.query.all()
+    user_list = []
+    for user in users:
+        user_list.append({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'created_at': user.created_at.strftime('%Y-%m-%d %H:%M:%S') if user.created_at else 'N/A',
+            'progress_count': len(user.progress)
+        })
+    
+    html = '<html><head><title>Registered Users</title><style>'
+    html += 'body{font-family:Arial;padding:40px;background:#f5f5f5;}'
+    html += 'table{width:100%;background:white;border-collapse:collapse;box-shadow:0 2px 10px rgba(0,0,0,0.1);}'
+    html += 'th,td{padding:15px;text-align:left;border-bottom:1px solid #ddd;}'
+    html += 'th{background:#667eea;color:white;}'
+    html += 'tr:hover{background:#f9f9f9;}'
+    html += 'h1{color:#667eea;}'
+    html += '.back{display:inline-block;padding:10px 20px;background:#667eea;color:white;text-decoration:none;border-radius:5px;margin-bottom:20px;}'
+    html += '</style></head><body>'
+    html += '<a href="/" class="back">← Back to Home</a>'
+    html += f'<h1>Registered Users ({len(user_list)})</h1>'
+    html += '<table><tr><th>ID</th><th>Username</th><th>Email</th><th>Registered</th><th>Progress Items</th></tr>'
+    
+    for user in user_list:
+        html += f'<tr><td>{user["id"]}</td><td>{user["username"]}</td><td>{user["email"]}</td><td>{user["created_at"]}</td><td>{user["progress_count"]}</td></tr>'
+    
+    html += '</table></body></html>'
+    return html
+
 @app.route('/admin/init_db')
 def init_database():
     db.create_all()
