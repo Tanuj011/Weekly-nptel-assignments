@@ -1,3 +1,6 @@
+import os
+import json
+from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
@@ -20,6 +23,20 @@ login_manager.login_view = 'login'
 @app.template_filter('from_json')
 def from_json_filter(value):
     return json.loads(value) if value else []
+
+# Admin password protection
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')  # Change this!
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        auth = request.authorization
+        if not auth or auth.password != ADMIN_PASSWORD:
+            return ('Admin access required', 401, {
+                'WWW-Authenticate': 'Basic realm="Admin Area"'
+            })
+        return f(*args, **kwargs)
+    return decorated_function
 
 # Models
 class User(UserMixin, db.Model):
@@ -194,6 +211,7 @@ def toggle_answer(question_id):
     return {'success': True, 'revealed': progress.revealed}
 
 @app.route('/admin/reset_db')
+@admin_required
 def reset_database():
     """Reset database - WARNING: Deletes all data!"""
     db.drop_all()
@@ -201,6 +219,7 @@ def reset_database():
     return redirect(url_for('init_database'))
 
 @app.route('/admin/users')
+@admin_required
 def view_users():
     """View all registered users"""
     users = User.query.all()
@@ -234,6 +253,7 @@ def view_users():
     return html
 
 @app.route('/admin/init_db')
+@admin_required
 def init_database():
     db.create_all()
     
