@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header fade-in-up">
+        <h1>Welcome back, {{ current_user.username }}! 👋</h1>
+        <p>Track your progress and access weekly assignments</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card glass-card fade-in-up" style="animation-delay: 0.1s;">
+            <div class="stat-value">{{ week_stats|length }}</div>
+            <div class="stat-label">Total Weeks</div>
+        </div>
+        <div class="stat-card glass-card fade-in-up" style="animation-delay: 0.2s;">
+            <div class="stat-value">
+                {% set active_weeks = week_stats|selectattr('week.status', 'equalto', 'active')|list|length %}
+                {{ active_weeks }}
+            </div>
+            <div class="stat-label">Active Weeks</div>
+        </div>
+        <div class="stat-card glass-card fade-in-up" style="animation-delay: 0.3s;">
+            <div class="stat-value">
+                {% set total_questions = week_stats|sum(attribute='total') %}
+                {{ total_questions }}
+            </div>
+            <div class="stat-label">Total Questions</div>
+        </div>
+        <div class="stat-card glass-card fade-in-up" style="animation-delay: 0.4s;">
+            <div class="stat-value">
+                {% set total_revealed = week_stats|sum(attribute='revealed') %}
+                {{ total_revealed }}
+            </div>
+            <div class="stat-label">Answers Revealed</div>
+        </div>
+    </div>
+
+    <div class="weeks-grid">
+        {% for stat in week_stats %}
+        <div class="week-card glass-card fade-in-up" style="animation-delay: {{ loop.index * 0.1 }}s;" onclick="window.location.href='{{ url_for('view_week', week_id=stat.week.id) }}'">
+            <div class="week-info">
+                <h3>Week {{ stat.week.week_number }}: {{ stat.week.title }}</h3>
+                <div class="week-meta">
+                    <span>📅 Due: {{ stat.week.due_date }}</span>
+                    <span>📝 {{ stat.total }} Questions</span>
+                </div>
+                <span class="status-badge status-{{ stat.week.status }}">{{ stat.week.status }}</span>
+            </div>
+            <div class="week-progress">
+                <div class="progress-circle" style="--progress: {{ stat.percentage }}">
+                    <span class="progress-text">{{ stat.percentage|int }}%</span>
+                </div>
+                <p style="margin-top: 10px; color: var(--text-secondary); font-size: 14px;">
+                    {{ stat.revealed }}/{{ stat.total }} revealed
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

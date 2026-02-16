@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card glass-card fade-in-up">
+        <h2>Welcome Back</h2>
+        <p>Sign in to continue your learning journey</p>
+        
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="your.email@example.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+        
+        <div class="auth-footer">
+            Don't have an account? <a href="{{ url_for('register') }}">Create one</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

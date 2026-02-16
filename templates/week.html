@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header fade-in-up">
+        <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-bottom: 20px;">← Back to Dashboard</a>
+        <h1>Week {{ week.week_number }}: {{ week.title }}</h1>
+        <p>📅 Due: {{ week.due_date }} | 📝 {{ questions|length }} Questions</p>
+    </div>
+
+    <div class="questions-grid">
+        {% for question in questions %}
+        <div class="question-card glass-card fade-in-up {% if user_progress[question.id] %}revealed{% endif %}" 
+             style="animation-delay: {{ loop.index * 0.1 }}s;"
+             data-question-id="{{ question.id }}">
+            <div class="question-header">
+                <div class="question-number">{{ question.question_number }}</div>
+                <div class="question-status">{% if user_progress[question.id] %}🔓{% else %}🔒{% endif %}</div>
+            </div>
+            
+            <div class="question-text">{{ question.question_text }}</div>
+            
+            {% if question.options %}
+            <div class="options">
+                {% set options_list = question.options|from_json %}
+                {% for option in options_list %}
+                <div class="option">{{ option }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="answer-section">
+                <div class="answer-divider"></div>
+                <div class="answer-content">
+                    <div class="answer-label">✅ Correct Answer:</div>
+                    <div class="answer-text">{{ question.answer }}</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="margin-top: 40px; text-align: center;">
+        <button class="btn btn-primary" id="revealAllBtn">🔓 Reveal All Answers</button>
+        <button class="btn btn-danger" id="hideAllBtn">🔒 Hide All Answers</button>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.question-card').forEach(card => {
+    card.addEventListener('click', async function(e) {
+        if (e.target.closest('button')) return;
+        
+        const questionId = this.dataset.questionId;
+        const response = await fetch(`/toggle_answer/${questionId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            this.classList.toggle('revealed');
+            const status = this.querySelector('.question-status');
+            status.textContent = data.revealed ? '🔓' : '🔒';
+        }
+    });
+});
+
+document.getElementById('revealAllBtn').addEventListener('click', async function() {
+    const cards = document.querySelectorAll('.question-card');
+    for (const card of cards) {
+        if (!card.classList.contains('revealed')) {
+            const questionId = card.dataset.questionId;
+            const response = await fetch(`/toggle_answer/${questionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            if (data.success && data.revealed) {
+                card.classList.add('revealed');
+                card.querySelector('.question-status').textContent = '🔓';
+            }
+        }
+    }
+});
+
+document.getElementById('hideAllBtn').addEventListener('click', async function() {
+    const cards = document.querySelectorAll('.question-card');
+    for (const card of cards) {
+        if (card.classList.contains('revealed')) {
+            const questionId = card.dataset.questionId;
+            const response = await fetch(`/toggle_answer/${questionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            if (data.success && !data.revealed) {
+                card.classList.remove('revealed');
+                card.querySelector('.question-status').textContent = '🔒';
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

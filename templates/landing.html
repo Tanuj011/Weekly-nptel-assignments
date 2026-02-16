@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="hero fade-in-up">
+        <h1>Your Gateway to<br>NPTEL Success</h1>
+        <p>Access weekly assignment solutions for Software Testing (noc26_cs59). Track your progress, reveal answers strategically, and ace your course with our interactive learning platform.</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started Free</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Sign In</a>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature-card glass-card fade-in-up" style="animation-delay: 0.1s;">
+            <div class="feature-icon float">🎯</div>
+            <h3>Weekly Updates</h3>
+            <p>Get fresh assignment solutions every week as the course progresses. Stay ahead with timely access to answers.</p>
+        </div>
+        <div class="feature-card glass-card fade-in-up" style="animation-delay: 0.2s;">
+            <div class="feature-icon float" style="animation-delay: 1s;">📊</div>
+            <h3>Track Progress</h3>
+            <p>Monitor your learning journey with detailed progress tracking for each week and question.</p>
+        </div>
+        <div class="feature-card glass-card fade-in-up" style="animation-delay: 0.3s;">
+            <div class="feature-icon float" style="animation-delay: 2s;">🔐</div>
+            <h3>Secure Access</h3>
+            <p>Your personal account keeps your progress safe and synced across all your devices.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
